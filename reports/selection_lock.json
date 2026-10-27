@@ -1,0 +1,22 @@
+{
+  "seed": 42,
+  "primary_outcome": "conversion",
+  "primary_coverage": 0.2,
+  "selected_models": {
+    "uplift": "logit_0.1",
+    "multiarm": "logit_0.1"
+  },
+  "candidates": [
+    "logit_0.1",
+    "logit_1",
+    "boost"
+  ],
+  "selection_metric": "validation AIPW incremental conversions at 20% contacts",
+  "primary_contrast": "multiarm minus random_mens",
+  "propensity": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "splits_sha256": "411533ff17269ec30742a6bde4fbdd4eb4464381f45c0cc8db4842d100399c82"
+}

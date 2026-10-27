@@ -1,0 +1,24 @@
+{
+  "rows": 64000,
+  "columns": 12,
+  "missing": 0,
+  "duplicate_profiles": 6562,
+  "duplicate_handling": "Retained: no customer identifier; equal profiles can be different customers.",
+  "assignment_counts": {
+    "No E-Mail": 21306,
+    "Mens E-Mail": 21307,
+    "Womens E-Mail": 21387
+  },
+  "srm_pvalue": 0.9036929575604196,
+  "split_counts": {
+    "train": 38400,
+    "test": 12800,
+    "validation": 12800
+  },
+  "split_purchases": {
+    "train": 338,
+    "validation": 109,
+    "test": 131
+  },
+  "max_abs_smd": 0.01365900039927897
+}

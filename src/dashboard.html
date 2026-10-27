@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INCREMENT — Uplift Lab</title>
+<style>
+:root{--bg:#f5f4ef;--ink:#20242a;--muted:#646b75;--line:#deded6;--purple:#7b54ac;--green:#17866f;--lime:#d9f27e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.55 "Segoe UI",Arial,sans-serif;color:var(--ink)}
+a{color:inherit}header{max-width:1220px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:24px 28px}
+.brand{font-weight:850;letter-spacing:-1px;font-size:23px}.brand span{font-weight:400;font-size:14px;letter-spacing:1px;color:var(--muted);margin-left:14px}
+nav{display:flex;gap:22px;font-size:13px}nav a{text-decoration:none}main{max-width:1220px;margin:auto;padding:0 28px 50px}
+.hero{background:#20242a;color:#f8f8ef;border-radius:24px;padding:42px;display:grid;grid-template-columns:1.4fr 1fr;gap:50px;overflow:hidden}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:2px;font-weight:650;color:var(--muted)}
+.hero .eyebrow{color:var(--lime)}h1{font-size:clamp(32px,4vw,52px);line-height:1.1;letter-spacing:-2px;margin:16px 0 20px;max-width:650px}
+.hero p{color:#c5c8cb;max-width:620px;font-size:16px}.hero-side{border-left:1px solid #4a4e52;padding:10px 0 0 30px;align-self:center}
+.hero-side strong{display:block;font-size:44px;line-height:1.15;color:var(--lime);letter-spacing:-1px;margin:14px 0}
+.small{font-size:12px;color:var(--muted)}.hero .small{color:#bcc0c3}.badge{border:1px solid #62685d;border-radius:100px;padding:6px 11px;font-size:11px;color:var(--lime);display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:22px 0 48px}.stat,.card{border:1px solid var(--line);border-radius:18px;background:#fffefa}
+.stat{padding:19px 22px}.stat strong{font-size:27px;display:block;letter-spacing:-.7px}.stat span{font-size:12px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin:0 0 20px}
+h2{font-size:29px;letter-spacing:-.8px;line-height:1.2;margin:7px 0}h3{margin:0 0 16px;font-size:17px}.section-head p{max-width:480px;font-size:13px;color:var(--muted);margin:0}
+.lab{display:grid;grid-template-columns:280px 1fr;gap:20px}.controls{padding:25px}.field{margin-bottom:21px}.field label{display:block;font-size:12px;font-weight:650;margin-bottom:7px}
+input,select{width:100%;border:1px solid #cacdc5;padding:10px 12px;border-radius:9px;background:#fff;font:inherit;color:var(--ink)}input:focus,select:focus{outline:3px solid #d4c6e8}
+.inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hint{font-size:11px;line-height:1.5;color:var(--muted);margin-top:6px}
+.chart-card{padding:24px;min-width:0}.legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11px;margin:8px 0 10px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+svg{width:100%;height:auto;display:block}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.result{padding:18px;background:#edeee7;border-radius:13px}.result strong{display:block;font-size:25px;letter-spacing:-.6px}.result span{font-size:11px;color:var(--muted)}.result .ci{display:block;font-size:11px;color:#505760;margin-top:5px}
+.callout{border-left:3px solid var(--purple);padding:12px 16px;background:#ece7f2;font-size:13px;border-radius:0 9px 9px 0;margin-top:20px}
+.table-card{padding:25px;margin-top:22px;overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--muted);font-size:11px;font-weight:600;padding:12px 9px;border-bottom:1px solid var(--line)}
+td{padding:13px 9px;border-bottom:1px solid #ecece7}tbody tr:last-child td{border-bottom:0}td:not(:first-child),th:not(:first-child){text-align:right}tr.selected{background:#f0ecf6}
+section{margin-bottom:48px}.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}.two .card{padding:26px}.pill{font-size:11px;display:inline-block;padding:4px 8px;background:#e9ece3;border-radius:100px;margin-right:6px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.step{padding:22px;background:#eeede6;border-radius:14px}.step b{font-size:13px}.step p{font-size:12px;color:var(--muted);margin:8px 0 0}.number{font-size:24px;color:var(--purple);display:block;margin-bottom:15px}
+details{border-bottom:1px solid var(--line);padding:14px 0;font-size:13px}summary{cursor:pointer;font-weight:600}details p{color:var(--muted);max-width:900px}
+footer{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:22px 0;font-size:12px;color:var(--muted);gap:20px}.error{color:#a63131;font-size:12px}
+@media(max-width:850px){.hero{grid-template-columns:1fr;padding:28px;gap:20px}.hero-side{border-left:0;border-top:1px solid #4a4e52;padding:20px 0 0}.stats{grid-template-columns:repeat(2,1fr)}.lab{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:1fr 1fr;gap:15px}.controls h3,.controls>p{grid-column:1/-1}.field{margin-bottom:5px}.two{grid-template-columns:1fr}.section-head{display:block}.steps{grid-template-columns:1fr}}
+@media(max-width:520px){header,main{padding-left:16px;padding-right:16px}nav{display:none}.hero{border-radius:16px}.result-grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.stats{gap:9px}.stat{padding:16px}.brand span{display:none}h1{letter-spacing:-1px}.chart-card{padding:14px}.section-head p{margin-top:12px}footer{display:block}}
+@media print{.controls,nav{display:none}.lab{grid-template-columns:1fr}.hero{background:#eee;color:#222}.hero p,.hero .small{color:#555}.hero-side strong{color:#17866f}section{break-inside:avoid}body{font-size:11px}}
+</style>
+</head>
+<body>
+<header><div class="brand">INCREMENT<span>UPLIFT LAB / 01</span></div><nav aria-label="Разделы"><a href="#lab">Калькулятор</a><a href="#experiment">Эксперимент</a><a href="#method">Метод</a></nav></header>
+<main>
+<section class="hero">
+<div><div class="eyebrow">Маркетинговая аналитика · рандомизированный эксперимент</div><h1>Кому письмо добавит покупку?</h1><p>Сравниваем выбор покупателей и выбор тех, чьё поведение меняется благодаря рекламе. Одинаковый бюджет контактов, отдельная тестовая выборка, измеримый дополнительный эффект.</p><span class="badge">64 000 клиентов · 3 группы · 2 недели</span></div>
+<div class="hero-side"><div class="eyebrow">Главное сравнение · охват 20%</div><strong id="primary">—</strong><div>покупок на 10 000 клиентов<br>сверх случайной рассылки мужского письма</div><p id="primaryCI" class="small"></p><div id="verdict" class="small"></div></div>
+</section>
+<div class="stats"><div class="stat"><strong>60 / 20 / 20</strong><span>обучение / валидация / тест, %</span></div><div class="stat"><strong id="testN">—</strong><span>клиентов на тесте</span></div><div class="stat"><strong id="testEvents">—</strong><span>покупок на тесте</span></div><div class="stat"><strong id="model">—</strong><span>модель выбора письма</span></div></div>
+<section id="lab">
+<div class="section-head"><div><div class="eyebrow">01 / Policy Lab</div><h2>Один бюджет. Пять стратегий.</h2></div><p>Двигай охват и сравнивай оценки на тесте. Основное заранее выбранное сравнение — 20%. Остальные сценарии помогают исследовать результат.</p></div>
+<div class="lab">
+<aside class="card controls"><h3>Параметры кампании</h3>
+<div class="field"><label for="strategy">Стратегия</label><select id="strategy"><option value="multiarm">Uplift / выбор письма</option><option value="uplift">Uplift / мужское письмо</option><option value="response">Вероятность покупки</option><option value="rule">Недавние покупки</option><option value="random_mens">Случайно / мужское письмо</option></select></div>
+<div class="field"><label for="coverage">Доля клиентов для контакта</label><select id="coverage"><option value="0">0% — никому</option><option value="0.05">5%</option><option value="0.1">10%</option><option value="0.2" selected>20% — главное сравнение</option><option value="0.3">30%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option></select></div>
+<div class="field"><label for="population">Размер аудитории</label><input id="population" type="number" min="1" max="10000000" step="1" value="10000"><div class="hint">Масштабирование предполагает сопоставимую аудиторию.</div></div>
+<div class="inline"><div class="field"><label for="cost">Контакт, $</label><input id="cost" type="number" min="0" max="10000" step=".01" value=".02"></div><div class="field"><label for="margin">Маржа покупки, $</label><input id="margin" type="number" min="0" max="1000000" step="1" value="25"></div></div>
+<p class="hint">Стоимость и маржа — твои допущения. В эксперименте они не измерялись. Расчёт использует фиксированную среднюю маржу дополнительной покупки.</p><p id="inputError" class="error" role="alert"></p></aside>
+<div class="card chart-card"><h3>Дополнительные покупки на 10 000 клиентов</h3><div class="legend" id="legend"></div><svg id="chart" viewBox="0 0 800 350" role="img" aria-label="Эффект стратегий при разном охвате"><title>Тестовые AIPW оценки дополнительных покупок</title></svg><div class="small">Линии — оценки, без доверительных полос. Интервал выбранного сценария показан ниже.</div>
+<div class="result-grid" aria-live="polite"><div class="result"><span>Дополнительные покупки</span><strong id="purchases">—</strong><span class="ci" id="purchaseCI"></span></div><div class="result"><span>Письма / стоимость</span><strong id="contacts">—</strong><span class="ci" id="contactCost"></span></div><div class="result"><span>Сценарий доп. прибыли</span><strong id="profit">—</strong><span class="ci" id="profitCI"></span></div></div>
+<div class="callout" id="scenario"></div></div></div>
+<div class="card table-card"><h3 id="tableTitle">Сравнение при охвате 20%</h3><table><thead><tr><th>Стратегия</th><th>Доп. покупки / 10 000</th><th>95% ДИ</th><th>Разница со случайной</th></tr></thead><tbody id="policyTable"></tbody></table><p class="small">Последняя колонка — парная разность и её 95% ДИ. Интервалы приближённые, индивидуальные; выбор лучшего охвата по тесту создаёт оптимизм.</p></div>
+</section>
+<section id="experiment"><div class="section-head"><div><div class="eyebrow">02 / A/B/C test</div><h2>Сначала эффект самой рассылки</h2></div><p>Средние результаты по всем 64 000 клиентам. Покупки считаются относительно всей группы, включая тех, кто ничего не купил.</p></div>
+<div class="card table-card"><table><thead><tr><th>Группа</th><th>Клиентов</th><th>Покупки</th><th>Конверсия</th><th>Выручка / клиент</th></tr></thead><tbody id="experimentTable"></tbody></table></div>
+<div class="two" style="margin-top:20px"><div class="card"><h3>Проверка эксперимента</h3><p id="quality"></p><p class="small">SRM проверяет соответствие размеров групп ожидаемому распределению. SMD показывает баланс наблюдаемых признаков. Эти проверки помогают найти проблемы, но не доказывают корректность дизайна.</p></div><div class="card"><h3>Что означает «эффект»</h3><p>Разница средней вероятности покупки между письмом и контролем. Наблюдаемая покупка клиента сама по себе не показывает, повлияло ли на неё письмо.</p><p class="small">Мужское и женское письмо — названия ассортимента. Пол клиентов в данных не указан. Не интерпретируй эти группы как пол аудитории.</p></div></div></section>
+<section id="method"><div class="section-head"><div><div class="eyebrow">03 / Reproducible by design</div><h2>Как получен результат</h2></div><p>Модель и основной охват выбраны до тестовой оценки. Полный протокол и ограничения — в отчёте.</p></div>
+<div class="steps"><div class="step"><span class="number">01</span><b>Обучить</b><p>38 400 клиентов. Только признаки до рассылки. Отдельная модель покупки для каждой группы.</p></div><div class="step"><span class="number">02</span><b>Выбрать и зафиксировать</b><p>12 800 клиентов. Три кандидата. Выбор по эффекту при 20% охвате. Затем обучение на train + validation.</p></div><div class="step"><span class="number">03</span><b>Оценить</b><p>12 800 клиентов теста. AIPW с известной вероятностью назначения 1/3. Парное сравнение при одинаковом бюджете.</p></div></div>
+<details><summary>Почему модель покупки и uplift выбирают разных людей?</summary><p>Первая ранжирует по вероятности покупки после письма. Вторая — по разнице прогнозов с письмом и без. Клиент с высокой исходной вероятностью покупки может иметь небольшой дополнительный эффект.</p></details>
+<details><summary>Откуда доверительные интервалы?</summary><p>Среднее клиентских AIPW оценок ± 1.96 стандартной ошибки. Для сравнения берём парную разность на тех же клиентах. Интервалы условны на обученной стратегии, приблизительно фиксируют порог охвата и не учитывают повторное обучение. При редких исходах и малом охвате нормальное приближение может быть неточным.</p></details>
+<details><summary>Можно ли по калькулятору выбрать лучший охват?</summary><p>Можно исследовать сценарии, но максимум на тестовом графике не доказывает оптимальность. Охват и экономические допущения для новой кампании нужно выбрать заранее и подтвердить отдельным экспериментом. Отрицательный прогноз не доказывает вред конкретному клиенту.</p></details>
+<details><summary>Что ограничивает выводы?</summary><p>Данные относятся к 2008 году, окно наблюдения — две недели. Нет фактических расходов на кампанию, маржи и долгосрочных отписок. Масштабирование предполагает стабильность эффекта. Сильный средний эффект письма не гарантирует полезность персонализации.</p></details>
+</section>
+<footer><div>INCREMENT / портфолио аналитика данных<br>Python · SQL · эксперимент · uplift · оценка стратегии</div><div><a href="REPORT_RU.md">Полный отчёт</a> · <a href="tables/test_policies.csv">Результаты CSV</a> · <a href="https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html" target="_blank" rel="noopener">Источник данных</a></div></footer>
+</main>
+<script id="results" type="application/json">__RESULTS__</script>
+<script>
+"use strict";
+const R=JSON.parse(document.getElementById("results").textContent);
+const COLORS={random_mens:"#777c89",response:"#4f72c4",rule:"#d38935",uplift:"#9365c8",multiarm:"#17866f"};
+const ORDER=["random_mens","response","rule","uplift","multiarm"];
+const $=id=>document.getElementById(id);
+const f=(x,d=1)=>new Intl.NumberFormat("ru-RU",{maximumFractionDigits:d,minimumFractionDigits:d}).format(x);
+const ci=(x,scale=1)=>"["+f(x.low*scale)+"; "+f(x.high*scale)+"]";
+$("primary").textContent=(R.primary.estimate>=0?"+":"")+f(R.primary.estimate*10000);
+$("primaryCI").textContent="95% ДИ: "+ci(R.primary,10000)+" · фиксированный охват 20%";
+$("verdict").textContent=R.primary.low>0?"На тесте есть свидетельство преимущества.":R.primary.high<0?"На тесте стратегия уступила случайной рассылке.":"Убедительное преимущество на тесте не установлено.";
+$("testN").textContent=f(R.quality.split_counts.test,0);
+$("testEvents").textContent=f(R.quality.split_purchases.test,0);
+$("model").textContent=R.selection.selected_models.multiarm.replace("logit_","Logit C=");
+$("quality").textContent="SRM p = "+f(R.quality.srm_pvalue,3)+" · максимальный |SMD| = "+f(R.quality.max_abs_smd,3)+". Пропусков: "+R.quality.missing+".";
+$("experimentTable").innerHTML=R.arms.map(x=>"<tr><td>"+x.segment+"</td><td>"+f(x.customers,0)+"</td><td>"+f(x.purchases,0)+"</td><td>"+f(x.conversion_rate*100,3)+"%</td><td>$"+f(x.revenue_per_customer,2)+"</td></tr>").join("");
+$("legend").innerHTML=ORDER.map(s=>'<span><i class="dot" style="background:'+COLORS[s]+'"></i>'+R.policies.find(x=>x.strategy===s).label+"</span>").join("");
+function draw(q,selected){
+ const all=R.policies.map(x=>x.estimate*10000),lo=Math.min(0,...all),hi=Math.max(1,...all),pad=(hi-lo)*.12;
+ const bottom=lo-pad,top=hi+pad,W=800,H=350,L=55,T=20,PW=720,PH=275;
+ const x=v=>L+v*PW,y=v=>T+(top-v)/(top-bottom)*PH;
+ let svg='<title>Дополнительные покупки по стратегиям</title>';
+ for(let i=0;i<=4;i++){const v=bottom+(top-bottom)*i/4;svg+='<line x1="'+L+'" x2="'+(L+PW)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#e5e5de"/><text x="'+(L-9)+'" y="'+(y(v)+4)+'" text-anchor="end" fill="#646b75" font-size="11">'+f(v,0)+"</text>";}
+ for(const v of [0,.2,.5,.75,1])svg+='<text x="'+x(v)+'" y="319" text-anchor="middle" fill="#646b75" font-size="11">'+f(v*100,0)+"%</text>";
+ svg+='<line x1="'+x(q)+'" x2="'+x(q)+'" y1="'+T+'" y2="'+(T+PH)+'" stroke="#8f879e" stroke-dasharray="4 5"/>';
+ for(const s of ORDER){const rows=R.policies.filter(r=>r.strategy===s);const pts=rows.map(r=>x(r.coverage)+","+y(r.estimate*10000)).join(" ");
+ svg+='<polyline points="'+pts+'" fill="none" stroke="'+COLORS[s]+'" stroke-width="'+(s===selected?3.5:1.8)+'" opacity="'+(s===selected?1:.65)+'"/>';
+ const p=rows.find(r=>r.coverage===q);svg+='<circle cx="'+x(q)+'" cy="'+y(p.estimate*10000)+'" r="'+(s===selected?5:3)+'" fill="'+COLORS[s]+'"/>';}
+ svg+='<text x="415" y="345" text-anchor="middle" fill="#646b75" font-size="11">Охват аудитории</text>';
+ $("chart").innerHTML=svg;
+}
+function update(){
+ const s=$("strategy").value,q=Number($("coverage").value),N=Number($("population").value),C=Number($("cost").value),M=Number($("margin").value);
+ const valid=["population","cost","margin"].every(id=>$(id).value!==""&&$(id).checkValidity())&&[N,C,M].every(Number.isFinite);
+ $("inputError").textContent=valid?"":"Проверь числа: аудитория — целое от 1 до 10 млн; стоимость и маржа неотрицательные.";
+ if(!valid)return;
+ const r=R.policies.find(x=>x.strategy===s&&x.coverage===q),n=N*r.actual_coverage,cost=n*C;
+ $("purchases").textContent=f(r.estimate*N);
+ $("purchaseCI").textContent="95% ДИ "+ci(r,N);
+ $("contacts").textContent=f(n,0);
+ $("contactCost").textContent="Расход на контакты: $"+f(cost,2);
+ $("profit").textContent="$"+f(N*r.estimate*M-cost,2);
+ $("profitCI").textContent="Сценарный 95% ДИ: [$"+f(N*r.low*M-cost,2)+"; $"+f(N*r.high*M-cost,2)+"]";
+ $("tableTitle").textContent="Одинаковый бюджет: охват "+f(q*100,0)+"%";
+ $("policyTable").innerHTML=ORDER.map(name=>{
+   const v=R.policies.find(x=>x.strategy===name&&x.coverage===q);
+   const p=R.paired.find(x=>x.strategy===name&&x.coverage===q);
+   return '<tr class="'+(name===s?"selected":"")+'"><td>'+v.label+"</td><td>"+f(v.estimate*10000)+"</td><td>"+ci(v,10000)+"</td><td>"+(p?f(p.estimate*10000)+" "+ci(p,10000):"База сравнения")+"</td></tr>";
+ }).join("");
+ const paired=R.paired.find(x=>x.strategy===s&&x.coverage===q);
+ const actionText=s==="multiarm"?" Мужское письмо: "+f(N*r.mens_share,0)+", женское: "+f(N*r.womens_share,0)+".":"";
+ $("scenario").textContent=(q===0?"Рассылка отключена: ноль контактов и нулевой дополнительный эффект.":paired?(paired.low>0?"Разница со случайной рассылкой положительна в этом интервале.":paired.high<0?"В этом сценарии стратегия уступает случайной рассылке.":"Интервал разницы со случайной рассылкой включает ноль."):"Случайный выбор клиентов: базовая стратегия.")+actionText;
+ draw(q,s);
+}
+for(const id of ["strategy","coverage","population","cost","margin"])$(id).addEventListener("input",update);
+update();
+</script>
+</body></html>
