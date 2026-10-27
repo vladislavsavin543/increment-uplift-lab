@@ -1,4 +1,4 @@
--- One row per randomized customer. source_row is a CSV row, not a customer ID.
+-- Одна строка на клиента эксперимента. source_row — номер строки CSV, а не ID клиента.
 CREATE OR REPLACE TABLE customer_mart AS
 SELECT source_row, recency::INTEGER AS recency, history::DOUBLE AS history,
        history_segment, mens::INTEGER AS mens, womens::INTEGER AS womens,

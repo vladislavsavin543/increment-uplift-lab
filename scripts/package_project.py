@@ -1,4 +1,4 @@
-"""Create a portable source/results archive without redistributing customer data."""
+"""Архив исходного кода и результатов без данных на уровне клиентов."""
 import hashlib
 import json
 from pathlib import Path
@@ -28,7 +28,7 @@ def main():
             archive.write(path,Path(ROOT.name)/path.relative_to(ROOT))
     with zipfile.ZipFile(destination) as archive:
         if archive.testzip() is not None:
-            raise ValueError("Archive integrity check failed")
+            raise ValueError("Проверка целостности архива не пройдена")
     print(json.dumps(dict(archive=destination.name,files=len(paths),bytes=destination.stat().st_size,
         sha256=hashlib.sha256(destination.read_bytes()).hexdigest()),indent=2))
 

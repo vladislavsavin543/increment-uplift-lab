@@ -1,4 +1,4 @@
-"""Rebuild the complete analysis. Run from any directory: python run.py."""
+"""Полная пересборка анализа. Запуск из любой папки: python run.py."""
 import hashlib
 import importlib.metadata
 import json
@@ -17,17 +17,11 @@ from sklearn.model_selection import train_test_split
 from src.core import (ARMS, features, fit_tlearner, predict_arms, arm_scores,
     policy_weights, policy_scores, summarize, experiment_effects, uplift_curve)
 from scripts.download_data import main as download
+from src.localization import STRATEGY_LABELS as LABELS
 
 SEED = 42
 COVERAGES = [0, .05, .1, .2, .3, .5, .75, 1]
 PRIMARY_Q = .2
-LABELS = {
-    "random_mens": "Случайно / мужское письмо",
-    "response": "Вероятность покупки",
-    "rule": "Недавние покупки",
-    "uplift": "Uplift / мужское письмо",
-    "multiarm": "Uplift / выбор письма",
-}
 TABLES = ROOT/"reports"/"tables"
 
 def save_json(path, value):
@@ -37,23 +31,23 @@ def audit(raw):
     required = {"recency", "history_segment", "history", "mens", "womens", "zip_code",
                 "newbie", "channel", "segment", "visit", "conversion", "spend"}
     if set(raw.columns) != required or len(raw) != 64000:
-        raise ValueError("Unexpected raw schema or row count")
+        raise ValueError("Неожиданная структура исходных данных или число строк")
     if raw.isna().any().any():
-        raise ValueError("Raw data contains missing values")
+        raise ValueError("В исходных данных есть пропуски")
     if set(raw.segment.unique()) != set(ARMS):
-        raise ValueError("Unexpected treatment labels")
+        raise ValueError("Неожиданные названия экспериментальных групп")
     for name in ["mens", "womens", "newbie", "visit", "conversion"]:
         if not raw[name].isin([0, 1]).all():
-            raise ValueError(f"Nonbinary {name}")
+            raise ValueError(f"Поле {name} содержит значения, отличные от 0 и 1")
     if (raw[["history", "spend"]] < 0).any().any() or not np.isfinite(raw[["history", "spend"]]).all().all():
-        raise ValueError("Invalid monetary values")
+        raise ValueError("Некорректные денежные значения")
     if not raw.recency.between(1, 12).all():
-        raise ValueError("Unexpected recency")
+        raise ValueError("Недопустимое число месяцев с прошлой покупки")
     if (raw.conversion > raw.visit).any() or ((raw.spend > 0) != raw.conversion.astype(bool)).any():
-        raise ValueError("Inconsistent outcomes")
+        raise ValueError("Исходы противоречат друг другу")
     counts = raw.segment.value_counts().reindex(ARMS)
     return dict(rows=len(raw), columns=len(raw.columns), missing=0,
-        duplicate_profiles=int(raw.duplicated().sum()), duplicate_handling="Retained: no customer identifier; equal profiles can be different customers.",
+        duplicate_profiles=int(raw.duplicated().sum()), duplicate_handling="Сохранены: идентификатора клиента нет; одинаковые профили могут принадлежать разным людям.",
         assignment_counts={k:int(v) for k,v in counts.items()},
         srm_pvalue=float(stats.chisquare(counts.to_numpy()).pvalue))
 
@@ -74,7 +68,7 @@ def policy_inputs(frame, binary_predictions, multi_predictions):
     binary_gain = binary_predictions[:, 1]-binary_predictions[:, 0]
     multi_gain = multi_predictions[:, 1:]-multi_predictions[:, [0]]
     actions = multi_gain.argmax(axis=1)+1
-    # Business rule fixed before evaluation; no outcomes used.
+    # Правило зафиксировано до оценки и не использует исходы.
     rule = -frame.recency.to_numpy()+np.log1p(frame.history.to_numpy())/100
     return {
         "random_mens": (np.zeros(len(frame)), 1, True),
@@ -107,7 +101,7 @@ def evaluate(frame, binary_predictions, multi_predictions, nuisance):
                                **summarize(vectors[name]-vectors["random_mens"])))
         if q == PRIMARY_Q:
             primary_vectors = vectors
-    # Primary comparison is locked at q=.2; other coverage results are exploratory.
+    # Главное сравнение зафиксировано при q=0,2; другие охваты — исследовательские.
     primary = summarize(primary_vectors["multiarm"]-primary_vectors["random_mens"])
     response_comparison = summarize(primary_vectors["multiarm"]-primary_vectors["response"])
     return pd.DataFrame(rows), pd.DataFrame(paired), primary, response_comparison
@@ -122,7 +116,7 @@ def main():
     con.register("raw", raw)
     con.execute((ROOT/"sql"/"01_customer_mart.sql").read_text(encoding="utf-8-sig"))
     frame = con.sql("SELECT * FROM customer_mart ORDER BY source_row").df()
-    # Only arm labels stratify splitting. Outcomes do not determine membership.
+    # Разбиение стратифицировано только по группе; исходы не определяют выборку.
     train_idx, holdout_idx = train_test_split(np.arange(len(frame)), test_size=.4,
         random_state=SEED, stratify=frame.action)
     val_idx, test_idx = train_test_split(holdout_idx, test_size=.5,
@@ -134,8 +128,8 @@ def main():
     splits.to_csv(ROOT/"data"/"processed"/"splits.csv", index=False)
     train, val, test = [frame.iloc[idx].sort_values("source_row").copy()
                         for idx in [train_idx, val_idx, test_idx]]
-    print(f"Split: train={len(train)}, validation={len(val)}, test={len(test)}", flush=True)
-    # Fixed nuisance for fair validation comparison across all candidates.
+    print(f"Разбиение: обучение={len(train)}, валидация={len(val)}, тест={len(test)}", flush=True)
+    # Одна вспомогательная модель для сопоставимой оценки кандидатов на валидации.
     nuisance_train = fit_tlearner(train, "logit_1")
     val_mu = predict_arms(nuisance_train, val)
     val_scores = arm_scores(val.conversion.to_numpy(), val.action.to_numpy(), val_mu)
@@ -143,7 +137,7 @@ def main():
     selection = []
     val_predictions = {}
     for kind in candidates:
-        print(f"Fitting candidate: {kind}", flush=True)
+        print(f"Обучение кандидата: {kind}", flush=True)
         models = fit_tlearner(train, kind)
         pred = predict_arms(models, val)
         val_predictions[kind] = pred
@@ -157,10 +151,10 @@ def main():
     selection = pd.DataFrame(selection)
     selected = {mode: str(selection.loc[selection[selection["mode"] == mode]["estimate"].idxmax(), "model"])
                 for mode in ["uplift", "multiarm"]}
-    # Lock decisions to disk BEFORE evaluating any test outcomes.
+    # Сохраняем решения на диск ДО оценки тестовых исходов.
     lock = dict(seed=SEED, primary_outcome="conversion", primary_coverage=PRIMARY_Q,
-        selected_models=selected, candidates=candidates, selection_metric="validation AIPW incremental conversions at 20% contacts",
-        primary_contrast="multiarm minus random_mens", propensity=[1/3]*3,
+        selected_models=selected, candidates=candidates, selection_metric="Дополнительные покупки по AIPW на валидации при охвате 20%",
+        primary_contrast="Аплифт с выбором письма минус случайная рассылка мужского письма", propensity=[1/3]*3,
         splits_sha256=hashlib.sha256((ROOT/"data"/"processed"/"splits.csv").read_bytes()).hexdigest())
     save_json(ROOT/"reports"/"selection_lock.json", lock)
     selection.to_csv(TABLES/"model_selection.csv", index=False)
@@ -176,14 +170,14 @@ def main():
     test_table, paired, primary, vs_response = evaluate(test, pred_binary, pred_multi, mu_test)
     test_table.to_csv(TABLES/"test_policies.csv", index=False)
     paired.to_csv(TABLES/"test_paired_comparisons.csv", index=False)
-    # Store full holdout scores for independent inspection and recalculation.
+    # Сохраняем тестовые прогнозы для независимой проверки и пересчёта.
     export = test[["source_row", "action", "conversion", "visit", "spend"]].copy()
     for a in range(3):
         export[f"mu_{a}"] = mu_test[:, a]
         export[f"binary_p_{a}"] = pred_binary[:, a]
         export[f"multi_p_{a}"] = pred_multi[:, a]
     export.to_csv(ROOT/"data"/"processed"/"holdout_predictions.csv", index=False)
-    # Descriptive full-experiment outputs are calculated after locking selection.
+    # Описательные итоги полного эксперимента считаем после фиксации выбора.
     quality.update(split_counts=membership.value_counts().to_dict(),
         split_purchases={name: int(frame.loc[membership == name, "conversion"].sum()) for name in ["train","validation","test"]})
     metrics = con.sql((ROOT/"sql"/"02_experiment_metrics.sql").read_text(encoding="utf-8-sig")).df()
@@ -213,8 +207,8 @@ def main():
     save_json(ROOT/"reports"/"results.json", summary)
     from src.reporting import build_reports
     build_reports(ROOT, summary)
-    print("Primary contrast per 10,000:", {k:round(v*10000,2) for k,v in primary.items()}, flush=True)
-    print("Complete: reports/dashboard.html and reports/REPORT_RU.md", flush=True)
+    print("Главная разница на 10 000 клиентов:", {k:round(v*10000,2) for k,v in primary.items()}, flush=True)
+    print("Готово: reports/dashboard.html и reports/REPORT_RU.md", flush=True)
 
 if __name__ == "__main__":
     main()

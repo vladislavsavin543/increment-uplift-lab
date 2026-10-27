@@ -1,23 +1,43 @@
-# Validation record
+# Журнал проверок
 
-- End-to-end analysis completed on Python 3.12.
-- Raw compressed CSV MD5 matched the published scikit-uplift checksum.
-- Schema, 64,000 rows, missingness, binary outcomes, finite monetary values and
-  outcome consistency checked before model fitting.
-- 10 pytest checks passed: known causal effect recovery, budget equality,
-  zero-contact effect, valid action probabilities, Holm adjustment, Qini
-  endpoint, exclusion of post-treatment predictors, disjoint complete splits,
-  held-out prediction membership, independent primary contrast reconstruction.
-- Notebook generated with executed computations and validated with nbformat.
-- Matplotlib policy comparison visually inspected.
-- Dashboard opened and visually inspected in the in-app browser.
-- Browser checks confirmed zero contacts gives zero effect/cost, switching to
-  random Mens targeting updates the comparison, scaling to 20,000 gives
-  34.4 incremental purchases and 4,000 contacts, and negative contact cost
-  triggers an explicit validation error.
-- A separate headless Edge launch was unavailable in this environment.
-  Functional browser verification used the supported in-app browser instead.
-- A narrow viewport was not visually verified; responsive CSS is included.
-- No live campaign, production deployment or new prospective experiment
-  has been performed.
+## Воспроизводимость анализа
 
+- Полный анализ повторно выполнен на Python 3.12 после перевода.
+- MD5 исходного сжатого CSV совпал с опубликованной контрольной суммой scikit-uplift.
+- До обучения проверяются структура, 64 000 строк, пропуски, бинарность исходов,
+  конечность денежных значений и согласованность покупок с посещениями и расходами.
+- Проходят 10 проверок pytest: восстановление известного причинного эффекта,
+  одинаковый бюджет, нулевой эффект без контактов, корректные вероятности действий,
+  поправка Холма, конечная точка Qini, исключение признаков после воздействия,
+  полное непересекающееся разбиение, принадлежность прогнозов тесту
+  и независимый пересчёт главной разницы.
+- Численные результаты сравниваются с сохранённой версией до перевода.
+  Из сравнения исключаются только подписи стратегий и текстовые описания.
+- Ноутбук пересобран с выполненными ячейками, русскими выводами и проверкой nbformat.
+
+## Проверка русской версии интерфейса
+
+- Дашборд открыт во встроенном браузере; русские подписи, названия групп
+  и выбранной модели проверены по отображаемому содержимому.
+- Превью дашборда и калькулятора обновлены.
+- Русские подписи графика сравнения при 20% охвате проверены визуально.
+- При нулевом охвате число контактов, эффект и расходы равны нулю.
+- Переключение на случайную рассылку мужского письма обновляет сравнение.
+- При увеличении аудитории до 20 000 случайная стратегия даёт 34,4 дополнительные
+  покупки и 4 000 контактов.
+- Отрицательная стоимость контакта вызывает сообщение об ошибке на русском.
+- После проверки восстановлен исходный сценарий: 20% охвата, 10 000 клиентов,
+  стоимость контакта 0,02 доллара, маржа покупки 25 долларов.
+- Узкий экран отдельно не проверялся; адаптивные стили включены.
+
+## Автоматические проверки в GitHub
+
+GitHub Actions устанавливает зависимости и запускает pytest при отправке изменений.
+Проверки сохранённых клиентских данных пропускаются, если полный анализ ещё
+не запускался: клиентские выгрузки исключены из репозитория.
+Поэтому успешная проверка GitHub не заменяет полную локальную пересборку.
+
+## Границы проверки
+
+Живая рассылка, промышленное внедрение и новый проспективный эксперимент
+не проводились. Результаты относятся к историческому эксперименту Hillstrom.

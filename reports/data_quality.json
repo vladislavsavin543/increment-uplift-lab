@@ -3,7 +3,7 @@
   "columns": 12,
   "missing": 0,
   "duplicate_profiles": 6562,
-  "duplicate_handling": "Retained: no customer identifier; equal profiles can be different customers.",
+  "duplicate_handling": "Сохранены: идентификатора клиента нет; одинаковые профили могут принадлежать разным людям.",
   "assignment_counts": {
     "No E-Mail": 21306,
     "Mens E-Mail": 21307,

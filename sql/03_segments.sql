@@ -1,4 +1,4 @@
--- Exploratory only; never use full-data segment effects to choose a policy.
+-- Исследовательский анализ: эффекты сегментов на всех данных не используются для выбора стратегии.
 WITH metrics AS (
     SELECT channel, action, COUNT(*) AS n, AVG(conversion) AS conversion_rate
     FROM customer_mart GROUP BY channel, action

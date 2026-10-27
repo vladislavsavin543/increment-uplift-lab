@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>INCREMENT — Uplift Lab</title>
+<title>INCREMENT — лаборатория аплифта</title>
 <style>
 :root{--bg:#f5f4ef;--ink:#20242a;--muted:#646b75;--line:#deded6;--purple:#7b54ac;--green:#17866f;--lime:#d9f27e}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.55 "Segoe UI",Arial,sans-serif;color:var(--ink)}
 a{color:inherit}header{max-width:1220px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:24px 28px}
-.brand{font-weight:850;letter-spacing:-1px;font-size:23px}.brand span{font-weight:400;font-size:14px;letter-spacing:1px;color:var(--muted);margin-left:14px}
+.brand{font-weight:850;letter-spacing:-1px;font-size:23px}.brand span{font-weight:400;font-size:12px;letter-spacing:1px;color:var(--muted);margin-left:14px}
 nav{display:flex;gap:22px;font-size:13px}nav a{text-decoration:none}main{max-width:1220px;margin:auto;padding:0 28px 50px}
 .hero{background:#20242a;color:#f8f8ef;border-radius:24px;padding:42px;display:grid;grid-template-columns:1.4fr 1fr;gap:50px;overflow:hidden}
 .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:2px;font-weight:650;color:var(--muted)}
@@ -38,7 +38,7 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 </style>
 </head>
 <body>
-<header><div class="brand">INCREMENT<span>UPLIFT LAB / 01</span></div><nav aria-label="Разделы"><a href="#lab">Калькулятор</a><a href="#experiment">Эксперимент</a><a href="#method">Метод</a></nav></header>
+<header><div class="brand">INCREMENT<span>ЛАБОРАТОРИЯ АПЛИФТА</span></div><nav aria-label="Разделы"><a href="#lab">Калькулятор</a><a href="#experiment">Эксперимент</a><a href="#method">Метод</a></nav></header>
 <main>
 <section class="hero">
 <div><div class="eyebrow">Маркетинговая аналитика · рандомизированный эксперимент</div><h1>Кому письмо добавит покупку?</h1><p>Сравниваем выбор покупателей и выбор тех, чьё поведение меняется благодаря рекламе. Одинаковый бюджет контактов, отдельная тестовая выборка, измеримый дополнительный эффект.</p><span class="badge">64 000 клиентов · 3 группы · 2 недели</span></div>
@@ -46,30 +46,30 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 </section>
 <div class="stats"><div class="stat"><strong>60 / 20 / 20</strong><span>обучение / валидация / тест, %</span></div><div class="stat"><strong id="testN">—</strong><span>клиентов на тесте</span></div><div class="stat"><strong id="testEvents">—</strong><span>покупок на тесте</span></div><div class="stat"><strong id="model">—</strong><span>модель выбора письма</span></div></div>
 <section id="lab">
-<div class="section-head"><div><div class="eyebrow">01 / Policy Lab</div><h2>Один бюджет. Пять стратегий.</h2></div><p>Двигай охват и сравнивай оценки на тесте. Основное заранее выбранное сравнение — 20%. Остальные сценарии помогают исследовать результат.</p></div>
+<div class="section-head"><div><div class="eyebrow">01 / Сравнение стратегий</div><h2>Один бюджет. Пять стратегий.</h2></div><p>Двигай охват и сравнивай оценки на тесте. Основное заранее выбранное сравнение — 20%. Остальные сценарии помогают исследовать результат.</p></div>
 <div class="lab">
 <aside class="card controls"><h3>Параметры кампании</h3>
-<div class="field"><label for="strategy">Стратегия</label><select id="strategy"><option value="multiarm">Uplift / выбор письма</option><option value="uplift">Uplift / мужское письмо</option><option value="response">Вероятность покупки</option><option value="rule">Недавние покупки</option><option value="random_mens">Случайно / мужское письмо</option></select></div>
+<div class="field"><label for="strategy">Стратегия</label><select id="strategy"><option value="multiarm">Аплифт / выбор письма</option><option value="uplift">Аплифт / мужское письмо</option><option value="response">Вероятность покупки</option><option value="rule">Недавние покупки</option><option value="random_mens">Случайно / мужское письмо</option></select></div>
 <div class="field"><label for="coverage">Доля клиентов для контакта</label><select id="coverage"><option value="0">0% — никому</option><option value="0.05">5%</option><option value="0.1">10%</option><option value="0.2" selected>20% — главное сравнение</option><option value="0.3">30%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option></select></div>
 <div class="field"><label for="population">Размер аудитории</label><input id="population" type="number" min="1" max="10000000" step="1" value="10000"><div class="hint">Масштабирование предполагает сопоставимую аудиторию.</div></div>
 <div class="inline"><div class="field"><label for="cost">Контакт, $</label><input id="cost" type="number" min="0" max="10000" step=".01" value=".02"></div><div class="field"><label for="margin">Маржа покупки, $</label><input id="margin" type="number" min="0" max="1000000" step="1" value="25"></div></div>
-<p class="hint">Стоимость и маржа — твои допущения. В эксперименте они не измерялись. Расчёт использует фиксированную среднюю маржу дополнительной покупки.</p><p id="inputError" class="error" role="alert"></p></aside>
+<p class="hint">Суммы указаны в долларах США. Стоимость и маржа — твои допущения. В эксперименте они не измерялись. Расчёт использует фиксированную среднюю маржу дополнительной покупки.</p><p id="inputError" class="error" role="alert"></p></aside>
 <div class="card chart-card"><h3>Дополнительные покупки на 10 000 клиентов</h3><div class="legend" id="legend"></div><svg id="chart" viewBox="0 0 800 350" role="img" aria-label="Эффект стратегий при разном охвате"><title>Тестовые AIPW оценки дополнительных покупок</title></svg><div class="small">Линии — оценки, без доверительных полос. Интервал выбранного сценария показан ниже.</div>
 <div class="result-grid" aria-live="polite"><div class="result"><span>Дополнительные покупки</span><strong id="purchases">—</strong><span class="ci" id="purchaseCI"></span></div><div class="result"><span>Письма / стоимость</span><strong id="contacts">—</strong><span class="ci" id="contactCost"></span></div><div class="result"><span>Сценарий доп. прибыли</span><strong id="profit">—</strong><span class="ci" id="profitCI"></span></div></div>
 <div class="callout" id="scenario"></div></div></div>
 <div class="card table-card"><h3 id="tableTitle">Сравнение при охвате 20%</h3><table><thead><tr><th>Стратегия</th><th>Доп. покупки / 10 000</th><th>95% ДИ</th><th>Разница со случайной</th></tr></thead><tbody id="policyTable"></tbody></table><p class="small">Последняя колонка — парная разность и её 95% ДИ. Интервалы приближённые, индивидуальные; выбор лучшего охвата по тесту создаёт оптимизм.</p></div>
 </section>
-<section id="experiment"><div class="section-head"><div><div class="eyebrow">02 / A/B/C test</div><h2>Сначала эффект самой рассылки</h2></div><p>Средние результаты по всем 64 000 клиентам. Покупки считаются относительно всей группы, включая тех, кто ничего не купил.</p></div>
+<section id="experiment"><div class="section-head"><div><div class="eyebrow">02 / Эксперимент с тремя группами</div><h2>Сначала эффект самой рассылки</h2></div><p>Средние результаты по всем 64 000 клиентам. Покупки считаются относительно всей группы, включая тех, кто ничего не купил.</p></div>
 <div class="card table-card"><table><thead><tr><th>Группа</th><th>Клиентов</th><th>Покупки</th><th>Конверсия</th><th>Выручка / клиент</th></tr></thead><tbody id="experimentTable"></tbody></table></div>
 <div class="two" style="margin-top:20px"><div class="card"><h3>Проверка эксперимента</h3><p id="quality"></p><p class="small">SRM проверяет соответствие размеров групп ожидаемому распределению. SMD показывает баланс наблюдаемых признаков. Эти проверки помогают найти проблемы, но не доказывают корректность дизайна.</p></div><div class="card"><h3>Что означает «эффект»</h3><p>Разница средней вероятности покупки между письмом и контролем. Наблюдаемая покупка клиента сама по себе не показывает, повлияло ли на неё письмо.</p><p class="small">Мужское и женское письмо — названия ассортимента. Пол клиентов в данных не указан. Не интерпретируй эти группы как пол аудитории.</p></div></div></section>
-<section id="method"><div class="section-head"><div><div class="eyebrow">03 / Reproducible by design</div><h2>Как получен результат</h2></div><p>Модель и основной охват выбраны до тестовой оценки. Полный протокол и ограничения — в отчёте.</p></div>
-<div class="steps"><div class="step"><span class="number">01</span><b>Обучить</b><p>38 400 клиентов. Только признаки до рассылки. Отдельная модель покупки для каждой группы.</p></div><div class="step"><span class="number">02</span><b>Выбрать и зафиксировать</b><p>12 800 клиентов. Три кандидата. Выбор по эффекту при 20% охвате. Затем обучение на train + validation.</p></div><div class="step"><span class="number">03</span><b>Оценить</b><p>12 800 клиентов теста. AIPW с известной вероятностью назначения 1/3. Парное сравнение при одинаковом бюджете.</p></div></div>
-<details><summary>Почему модель покупки и uplift выбирают разных людей?</summary><p>Первая ранжирует по вероятности покупки после письма. Вторая — по разнице прогнозов с письмом и без. Клиент с высокой исходной вероятностью покупки может иметь небольшой дополнительный эффект.</p></details>
+<section id="method"><div class="section-head"><div><div class="eyebrow">03 / Воспроизводимый анализ</div><h2>Как получен результат</h2></div><p>Модель и основной охват выбраны до тестовой оценки. Полный протокол и ограничения — в отчёте.</p></div>
+<div class="steps"><div class="step"><span class="number">01</span><b>Обучить</b><p>38 400 клиентов. Только признаки до рассылки. Отдельная модель покупки для каждой группы.</p></div><div class="step"><span class="number">02</span><b>Выбрать и зафиксировать</b><p>12 800 клиентов. Три кандидата. Выбор по эффекту при 20% охвате. Затем обучение на объединении обучения и валидации.</p></div><div class="step"><span class="number">03</span><b>Оценить</b><p>12 800 клиентов теста. AIPW с известной вероятностью назначения 1/3. Парное сравнение при одинаковом бюджете.</p></div></div>
+<details><summary>Почему модель покупки и аплифт выбирают разных людей?</summary><p>Первая ранжирует по вероятности покупки после письма. Вторая — по разнице прогнозов с письмом и без. Клиент с высокой исходной вероятностью покупки может иметь небольшой дополнительный эффект.</p></details>
 <details><summary>Откуда доверительные интервалы?</summary><p>Среднее клиентских AIPW оценок ± 1.96 стандартной ошибки. Для сравнения берём парную разность на тех же клиентах. Интервалы условны на обученной стратегии, приблизительно фиксируют порог охвата и не учитывают повторное обучение. При редких исходах и малом охвате нормальное приближение может быть неточным.</p></details>
 <details><summary>Можно ли по калькулятору выбрать лучший охват?</summary><p>Можно исследовать сценарии, но максимум на тестовом графике не доказывает оптимальность. Охват и экономические допущения для новой кампании нужно выбрать заранее и подтвердить отдельным экспериментом. Отрицательный прогноз не доказывает вред конкретному клиенту.</p></details>
 <details><summary>Что ограничивает выводы?</summary><p>Данные относятся к 2008 году, окно наблюдения — две недели. Нет фактических расходов на кампанию, маржи и долгосрочных отписок. Масштабирование предполагает стабильность эффекта. Сильный средний эффект письма не гарантирует полезность персонализации.</p></details>
 </section>
-<footer><div>INCREMENT / портфолио аналитика данных<br>Python · SQL · эксперимент · uplift · оценка стратегии</div><div><a href="REPORT_RU.md">Полный отчёт</a> · <a href="tables/test_policies.csv">Результаты CSV</a> · <a href="https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html" target="_blank" rel="noopener">Источник данных</a></div></footer>
+<footer><div>INCREMENT / портфолио аналитика данных<br>Python · SQL · эксперимент · аплифт · оценка стратегии</div><div><a href="REPORT_RU.md">Полный отчёт</a> · <a href="tables/test_policies.csv">Результаты CSV</a> · <a href="https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html" target="_blank" rel="noopener">Источник данных</a></div></footer>
 </main>
 <script id="results" type="application/json">__RESULTS__</script>
 <script>
@@ -77,6 +77,7 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 const R=JSON.parse(document.getElementById("results").textContent);
 const COLORS={random_mens:"#777c89",response:"#4f72c4",rule:"#d38935",uplift:"#9365c8",multiarm:"#17866f"};
 const ORDER=["random_mens","response","rule","uplift","multiarm"];
+const ARM_LABELS={"No E-Mail":"Без письма","Mens E-Mail":"Мужское письмо","Womens E-Mail":"Женское письмо"};
 const $=id=>document.getElementById(id);
 const f=(x,d=1)=>new Intl.NumberFormat("ru-RU",{maximumFractionDigits:d,minimumFractionDigits:d}).format(x);
 const ci=(x,scale=1)=>"["+f(x.low*scale)+"; "+f(x.high*scale)+"]";
@@ -85,9 +86,9 @@ $("primaryCI").textContent="95% ДИ: "+ci(R.primary,10000)+" · фиксиро�
 $("verdict").textContent=R.primary.low>0?"На тесте есть свидетельство преимущества.":R.primary.high<0?"На тесте стратегия уступила случайной рассылке.":"Убедительное преимущество на тесте не установлено.";
 $("testN").textContent=f(R.quality.split_counts.test,0);
 $("testEvents").textContent=f(R.quality.split_purchases.test,0);
-$("model").textContent=R.selection.selected_models.multiarm.replace("logit_","Logit C=");
+$("model").textContent=R.selection.selected_models.multiarm.startsWith("logit_")?"Лог. регрессия C="+R.selection.selected_models.multiarm.slice(6).replace(".",","):"Градиентный бустинг";
 $("quality").textContent="SRM p = "+f(R.quality.srm_pvalue,3)+" · максимальный |SMD| = "+f(R.quality.max_abs_smd,3)+". Пропусков: "+R.quality.missing+".";
-$("experimentTable").innerHTML=R.arms.map(x=>"<tr><td>"+x.segment+"</td><td>"+f(x.customers,0)+"</td><td>"+f(x.purchases,0)+"</td><td>"+f(x.conversion_rate*100,3)+"%</td><td>$"+f(x.revenue_per_customer,2)+"</td></tr>").join("");
+$("experimentTable").innerHTML=R.arms.map(x=>"<tr><td>"+ARM_LABELS[x.segment]+"</td><td>"+f(x.customers,0)+"</td><td>"+f(x.purchases,0)+"</td><td>"+f(x.conversion_rate*100,3)+"%</td><td>$"+f(x.revenue_per_customer,2)+"</td></tr>").join("");
 $("legend").innerHTML=ORDER.map(s=>'<span><i class="dot" style="background:'+COLORS[s]+'"></i>'+R.policies.find(x=>x.strategy===s).label+"</span>").join("");
 function draw(q,selected){
  const all=R.policies.map(x=>x.estimate*10000),lo=Math.min(0,...all),hi=Math.max(1,...all),pad=(hi-lo)*.12;

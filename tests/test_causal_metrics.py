@@ -1,4 +1,4 @@
-"""Checks of causal estimators and allocation, using known synthetic effects."""
+"""Проверки причинных оценок и бюджета на синтетических данных с известным эффектом."""
 import numpy as np
 import pytest
 from src.core import arm_scores, policy_weights, policy_scores, summarize, holm, features
@@ -12,7 +12,7 @@ def test_zero_contact_has_exactly_zero_increment():
     assert np.array_equal(policy_scores(w,scores)-scores[:,0],np.zeros(1000))
 
 def test_known_effect_recovered_and_paired_contrast():
-    # Deterministically balanced assignments within every potential-outcome type.
+    # Детерминированный баланс назначений для каждого типа потенциального исхода.
     n=30000
     a=np.tile([0,1,2],n//3)
     potential=np.tile(np.repeat(np.arange(100)/100,3),n//300)

@@ -1,50 +1,59 @@
-# INCREMENT — Uplift Lab
+# INCREMENT — лаборатория аплифта
 
-**Who should receive an email when the contact budget is limited?**
+**Кому отправить письмо, чтобы получить дополнительные покупки при ограниченном бюджете?**
 
-A reproducible marketing analytics portfolio project built on the randomized
-Hillstrom email experiment: SQL metrics, experiment checks, uplift modeling,
-held-out policy evaluation, and an offline campaign calculator.
+Портфолио-проект по маркетинговой аналитике на данных рандомизированного
+эксперимента Hillstrom: SQL-витрина, проверка эксперимента, моделирование
+дополнительного эффекта рассылки, оценка стратегий на отдельном тесте
+и интерактивный калькулятор экономики кампании.
 
-## Main finding
+Аплифт (uplift) — изменение вероятности покупки благодаря воздействию.
+Сравниваем выбор клиентов по вероятности покупки с выбором по ожидаемому
+дополнительному эффекту письма.
 
-Email campaigns increase average conversion in this experiment. However, the
-selected personalization policy does **not demonstrate an improvement over a
-random Mens-email campaign at 20% contact coverage**.
+## Главный результат
 
-On the held-out test, personalization minus random targeting is **−2.3 additional
-purchases per 10,000 customers (95% CI: −20.0 to +15.3)**.
-This is uncertainty about the difference, not proof that the policies are equal.
+В этом эксперименте рассылка повышает среднюю конверсию. Однако выбранная
+персонализация **не показала убедительного преимущества перед случайной
+рассылкой мужского письма при охвате 20%**.
 
-| Strategy, 20% contacts | Incremental purchases / 10,000 | Pointwise 95% CI |
+На отдельной тестовой выборке разница «персонализация минус случайный выбор»
+составила **−2,3 дополнительные покупки на 10 000 клиентов
+(95% доверительный интервал: от −20,0 до +15,3)**.
+Интервал показывает неопределённость разницы и не доказывает равенство стратегий.
+
+| Стратегия при охвате 20% | Дополнительные покупки на 10 000 клиентов | Индивидуальный 95% ДИ |
 |---|---:|---:|
-| Random targeting, Mens email | 17.2 | 8.5 to 25.9 |
-| Response ranking | 17.3 | −8.0 to 42.7 |
-| Recency business rule | 29.0 | 2.9 to 55.1 |
-| Binary uplift, Mens email | 17.5 | −1.9 to 36.9 |
-| Multi-arm uplift | 14.9 | −5.0 to 34.8 |
+| Случайный выбор / мужское письмо | 17,2 | от 8,5 до 25,9 |
+| Вероятность покупки | 17,3 | от −8,0 до 42,7 |
+| Недавние покупки | 29,0 | от 2,9 до 55,1 |
+| Аплифт / мужское письмо | 17,5 | от −1,9 до 36,9 |
+| Аплифт / выбор письма | 14,9 | от −5,0 до 34,8 |
 
-The recency rule has a higher point estimate, but its paired difference from random
-also includes zero. It is an exploratory comparison, not an established winner.
+Правило недавних покупок имеет более высокую точечную оценку, но доверительный
+интервал его парной разницы со случайным выбором тоже включает ноль.
+Это исследовательское сравнение, а не установленный победитель.
 
-![Equal-budget policy comparison](reports/figures/policy_20pct.png)
+![Стратегии при одинаковом бюджете](reports/figures/policy_20pct.png)
 
-## Explore the deliverables
+## Как посмотреть проект
 
-- **Open reports/dashboard.html** in a browser. It is self-contained and works offline.
-  On Windows, double-click **open_dashboard.cmd**.
-- [Business report in Russian](reports/REPORT_RU.md)
-- [Executed walkthrough notebook](notebooks/01_uplift_walkthrough.ipynb)
-- [Interview preparation in Russian](INTERVIEW_RU.md)
-- [Study sequence](START_HERE_RU.md)
-- [Machine-readable results](reports/results.json)
-- [Test policy comparisons](reports/tables/test_paired_comparisons.csv)
+- Скачай проект и открой **reports/dashboard.html** в браузере.
+  В Windows можно запустить **open_dashboard.cmd**.
+  Дашборд работает без интернета. На странице GitHub сам HTML отображается как код.
+- [Отчёт для бизнеса](reports/REPORT_RU.md)
+- [Ноутбук с выполненными расчётами](notebooks/01_uplift_walkthrough.ipynb)
+- [Подготовка к защите на собеседовании](INTERVIEW_RU.md)
+- [С чего начать изучение](START_HERE_RU.md)
+- [Источники и словарь полей данных](DATA_SOURCES.md)
+- [Результаты в JSON](reports/results.json)
+- [Парные сравнения стратегий на тесте](reports/tables/test_paired_comparisons.csv)
 
-![Dashboard preview](reports/figures/dashboard_preview.png)
+![Русскоязычный дашборд](reports/figures/dashboard_preview.png)
 
-## Reproduce
+## Как воспроизвести расчёты
 
-Python **3.12** is recommended. From this project directory:
+Рекомендуется **Python 3.12**. Выполни команды из папки проекта:
 
 ~~~bash
 python -m venv .venv
@@ -56,87 +65,101 @@ python scripts/build_notebook.py
 python -m pytest -q
 ~~~
 
-run.py downloads the public data if absent, validates its checksum, builds the
-DuckDB mart, trains candidates, locks validation decisions, evaluates the holdout,
-and rebuilds tables, figures, dashboard, and report. Runtime depends on the machine.
+run.py скачивает открытые данные при их отсутствии, проверяет контрольную сумму,
+строит витрину DuckDB, обучает кандидатов, фиксирует выбор на валидации,
+оценивает стратегии на тесте и пересобирает таблицы, графики, дашборд и отчёт.
+Время выполнения зависит от компьютера.
 
-The local folder already includes downloaded data and computed artifacts.
-The shareable ZIP and Git configuration omit raw and processed customer-level data.
-After extracting the ZIP, run the commands above to reconstruct those inputs;
-the dashboard, report, figures and saved notebook outputs can be viewed immediately.
+Исходные и обработанные данные на уровне клиентов исключены из Git и ZIP-архива.
+Команды выше восстанавливают их из публичного источника. Дашборд, отчёт,
+графики и сохранённые результаты ноутбука доступны сразу после скачивания проекта.
 
-## Analysis design
+## Дизайн анализа
 
-- 64,000 customers; three randomized actions: no email, Mens email, Womens email.
-- Primary outcome: conversion within two weeks. Visits and spend are secondary.
-- 60/20/20 split, stratified by assigned arm only; seeds 42 and 43.
-- T-learners: logistic regression C=0.1, C=1, shallow histogram gradient boosting.
-- Model selection: validation AIPW incremental conversions at 20% contact coverage.
-- Binary and multi-arm models selected separately; both select C=0.1 in this run.
-- Final models fit train+validation; holdout outcomes never used for fitting or selection.
-- The response baseline and binary uplift use the same fitted outcome models,
-  isolating the difference between response and incremental-effect ranking.
-- AIPW uses known assignment probabilities 1/3 and independently fitted outcome
-  regressions. Plain IPW estimates are exported as a sensitivity diagnostic.
-- Primary contrast: multi-arm vs random Mens targeting at 20% contacts.
-- Other coverages and segment comparisons are exploratory.
-- Six average-effect p-values use Holm adjustment. Displayed CIs are individual,
-  unadjusted 95% intervals.
-- Unnormalized binary Qini is defined explicitly in src/core.py and the report.
+- 64 000 клиентов; три случайно назначенные группы: без письма,
+  письмо с мужским ассортиментом и письмо с женским ассортиментом.
+  Названия писем не обозначают пол клиента.
+- Основной исход — покупка за две недели. Посещения и расходы — вторичные исходы.
+- Обучение / валидация / тест: 60 / 20 / 20%. Разбиение стратифицировано
+  только по назначенной группе; начальные значения генератора: 42 и 43.
+- Три кандидата T-learner: логистическая регрессия с C=0,1 и C=1,
+  неглубокий гистограммный градиентный бустинг.
+- Критерий выбора — дополнительные покупки по AIPW при охвате 20% на валидации.
+  Модели для мужского письма и для выбора письма подбираются отдельно;
+  в обоих случаях выбрана логистическая регрессия с C=0,1.
+- Итоговые модели обучаются на объединении обучения и валидации.
+  Тестовые исходы не используются для обучения или выбора модели.
+- Стратегии вероятности покупки и аплифта мужского письма используют одни
+  и те же модели исходов: сравнивается именно способ ранжирования.
+- AIPW использует известную вероятность назначения каждой группы 1/3
+  и модели исходов, обученные отдельно от оцениваемых наблюдений.
+  Оценки IPW без моделей исходов сохранены для проверки чувствительности.
+- Главное сравнение — персональный выбор письма против случайной рассылки
+  мужского письма при 20% охвате. Другие охваты и сегменты — исследовательский анализ.
+- К шести p-значениям средних эффектов применена поправка Холма.
+  Показанные 95% интервалы — индивидуальные, без поправки на множественность.
+- Определение ненормированного Qini приведено в src/core.py и отчёте.
 
-## Calculator
+## Калькулятор кампании
 
-Change strategy, contact coverage, population size, cost per contact, and assumed
-contribution margin per incremental purchase. Every strategy uses the same contact
-budget. A 0% option turns the campaign off.
+Можно менять стратегию, охват, размер аудитории, стоимость контакта
+и предполагаемую маржу дополнительной покупки. Все стратегии сравниваются
+при одном контактном бюджете. Охват 0% отключает рассылку.
 
-The profit display is a **scenario**, not observed profit. It assumes a fixed
-average contribution per additional conversion. Extrapolation to a new population
-assumes comparable customers and stable effects. Do not choose an allegedly
-optimal policy by maximizing a noisy test curve.
+Прибыль в калькуляторе — **сценарий**, рассчитанный при фиксированной средней
+марже, а не наблюдавшийся финансовый результат. Суммы указаны в долларах США:
+это валюта исходных данных, пересчёт в рубли не производится.
+Перенос оценки на новую аудиторию предполагает сопоставимых клиентов
+и стабильность эффекта. Максимум шумной тестовой кривой не доказывает оптимальность.
 
-## Project structure
+## Структура проекта
 
 ~~~text
-run.py                         end-to-end analysis
-src/core.py                    learners, allocation, AIPW, Qini, inference
-src/reporting.py               report and figure generation
-src/dashboard.html             offline dashboard source template
-sql/                           DuckDB mart, metrics, exploratory segments
-scripts/download_data.py       checksum-verified public data retrieval
-scripts/build_notebook.py      executed educational notebook builder
-notebooks/                     completed walkthrough
-tests/                         synthetic estimator and saved-result checks
-reports/                       dashboard, memo, tables, figures, decisions
-data/raw/                      local source data and provenance manifest
-data/processed/                local DuckDB, split map, holdout predictions
+run.py                         полный цикл анализа
+src/core.py                    модели, бюджет контактов, AIPW, Qini и интервалы
+src/localization.py            русские подписи и представление таблиц
+src/reporting.py               генерация отчёта и графиков
+src/dashboard.html             шаблон автономного дашборда
+sql/                           витрина DuckDB, метрики и исследование сегментов
+scripts/download_data.py       загрузка данных с проверкой контрольной суммы
+scripts/build_notebook.py      сборка ноутбука с выполненными расчётами
+notebooks/                     готовый разбор исследования
+tests/                         проверки оценок на синтетике и сохранённых результатов
+reports/                       дашборд, отчёт, таблицы, графики и решения
+data/raw/                      локальные исходные данные и сведения об источнике
+data/processed/                локальная база DuckDB, разбиение и тестовые прогнозы
 ~~~
 
-## Validation
+## Проверка качества
 
-10 pytest checks passed on the completed local analysis, including a synthetic
-known-effect recovery test and independent reconstruction of the main held-out
-contrast. CI runs the formula tests; saved-output checks run when analysis data
-exists. Browser checks covered rendered values, zero coverage, strategy changes,
-population scaling and rejection of negative costs. See reports/VALIDATION.md.
+На локальных результатах проходят 10 проверок pytest, включая восстановление
+известного причинного эффекта на синтетике и независимый пересчёт главной
+тестовой разницы. GitHub Actions запускает проверки при отправке изменений;
+проверки сохранённых данных выполняются, когда есть локальные результаты анализа.
+Подробности и проверенные сценарии дашборда — в [журнале проверок](reports/VALIDATION.md).
 
-## Limitations
+## Ограничения
 
-Only 131 conversions occur in the test set, so policy differences are noisy.
-Intervals are normal approximations conditional on trained models and approximately
-fixed budget thresholds; they do not include repeated-training or threshold
-estimation uncertainty, nor simultaneous coverage across the policy grid.
-Data is historical (2008); no long-term opt-outs, contact fatigue, or actual
-campaign costs are observed. Individual causal effects cannot be verified.
+На тесте всего 131 покупка, поэтому разницы между стратегиями оцениваются неточно.
+Нормальные доверительные интервалы условны на обученных моделях и приблизительно
+фиксированных порогах бюджета. Они не учитывают повторное обучение, оценку порогов
+и одновременное сравнение всей сетки охватов.
 
-## Data and attribution
+Данные исторические, за 2008 год. Долгосрочные отписки, усталость от писем
+и фактические расходы на кампанию не наблюдаются. Проверить индивидуальный
+причинный эффект невозможно.
 
-Kevin Hillstrom's MineThatData E-Mail Analytics and Data Mining Challenge (2008).
-[Original description](https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html).
-A mirror and expected MD5 are documented in
-[scikit-uplift's loader](https://www.uplift-modeling.com/en/latest/_modules/sklift/datasets/datasets.html#fetch_hillstrom).
-Read [DATA_SOURCES.md](DATA_SOURCES.md) before redistributing data.
+## Источник данных и лицензия
 
-Project source code is MIT licensed. Source data has its own rights; the code
-license does not grant a license to the dataset.
+Эксперимент Кевина Хиллстрома: MineThatData E-Mail Analytics and Data Mining Challenge (2008).
+[Исходное описание](https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html).
+Зеркало и ожидаемый MD5 указаны в
+[загрузчике scikit-uplift](https://www.uplift-modeling.com/en/latest/_modules/sklift/datasets/datasets.html#fetch_hillstrom).
+Условия использования и словарь полей — в [DATA_SOURCES.md](DATA_SOURCES.md).
 
+Код распространяется по лицензии MIT. В [LICENSE](LICENSE) сохранён исходный
+английский текст лицензии. Права на исходный набор данных рассматриваются отдельно;
+лицензия кода не предоставляет лицензию на данные.
+
+Документация, дашборд, графики и объяснения в ноутбуке написаны на русском.
+Названия библиотек, функций, CSV-полей и ключей JSON сохранены для совместимости.

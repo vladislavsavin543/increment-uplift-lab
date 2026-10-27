@@ -1,4 +1,4 @@
-"""Independent checks of saved outputs; skipped until run.py has been executed."""
+"""Независимые проверки результатов; пропускаются до выполнения run.py."""
 import json
 from pathlib import Path
 import numpy as np
@@ -7,7 +7,7 @@ import pytest
 from src.core import arm_scores,policy_weights,policy_scores,summarize
 
 ROOT=Path(__file__).resolve().parents[1]
-pytestmark=pytest.mark.skipif(not all((ROOT/p).exists() for p in ['reports/results.json','data/processed/splits.csv','data/processed/holdout_predictions.csv']),reason="Run analysis first")
+pytestmark=pytest.mark.skipif(not all((ROOT/p).exists() for p in ['reports/results.json','data/processed/splits.csv','data/processed/holdout_predictions.csv']),reason="Сначала выполните анализ: python run.py")
 
 def test_splits_cover_every_row_exactly_once():
     s=pd.read_csv(ROOT/'data/processed/splits.csv')

@@ -1,4 +1,4 @@
-"""Action order: 0=no email, 1=mens email, 2=womens email."""
+"""Порядок действий: 0 — без письма, 1 — мужское письмо, 2 — женское."""
 from __future__ import annotations
 import numpy as np
 import pandas as pd
@@ -31,11 +31,11 @@ def make_model(kind):
             min_samples_leaf=200, l2_regularization=10, learning_rate=0.05,
             early_stopping=False, random_state=42)
     else:
-        raise ValueError(f"Unknown model: {kind}")
+        raise ValueError(f"Неизвестная модель: {kind}")
     return make_pipeline(transform, estimator)
 
 def fit_tlearner(frame, kind):
-    """Fit separate response models on pretreatment covariates."""
+    """Обучаем отдельные модели покупки на признаках до рассылки."""
     return [make_model(kind).fit(features(frame.loc[frame.action == a]),
         frame.loc[frame.action == a, "conversion"]) for a in range(3)]
 
@@ -44,23 +44,23 @@ def predict_arms(models, frame):
     return np.column_stack([m.predict_proba(x)[:, 1] for m in models])
 
 def arm_scores(y, action, mu, propensity=PROPENSITY):
-    """AIPW: m_a(X) + 1[A=a]/e_a*(Y-m_a(X)); assignment e_a is known.
-    Fit nuisance independently of evaluated observations. Do not clip scores.
+    """AIPW: m_a(X) + 1[A=a]/e_a*(Y-m_a(X)); вероятность назначения e_a известна.
+    Модели исходов обучаются отдельно от оцениваемых наблюдений. Оценки не обрезаем.
     """
     y, action, mu = np.asarray(y), np.asarray(action), np.asarray(mu, dtype=float)
     if mu.shape != (len(y), 3):
-        raise ValueError("mu must have shape (n, 3)")
+        raise ValueError("Массив mu должен иметь размерность (n, 3)")
     p = np.asarray(propensity)
     if p.shape != (3,) or np.any(p <= 0) or not np.isclose(p.sum(), 1):
-        raise ValueError("Invalid assignment probabilities")
+        raise ValueError("Некорректные вероятности назначения")
     scores = mu.copy()
     scores[np.arange(len(y)), action] += (y-mu[np.arange(len(y)), action])/p[action]
     return scores
 
 def policy_weights(score, fraction, arm=1, random=False):
-    """floor(q*n) contacts. Random comparator integrated over assignments."""
+    """Бюджет — floor(q*n) контактов. Случайная стратегия усреднена по назначениям."""
     if not 0 <= fraction <= 1:
-        raise ValueError("fraction must be in [0, 1]")
+        raise ValueError("Доля контактов fraction должна быть в диапазоне [0, 1]")
     score = np.asarray(score)
     n = len(score)
     weights = np.zeros((n, 3))
@@ -73,7 +73,7 @@ def policy_weights(score, fraction, arm=1, random=False):
         chosen = np.argsort(-score, kind="stable")[:k]
         arms = np.full(n, arm, dtype=int) if np.isscalar(arm) else np.asarray(arm)
         if np.any(~np.isin(arms, [1, 2])):
-            raise ValueError("Contact actions must be 1 or 2")
+            raise ValueError("Контактное действие должно быть 1 или 2")
         weights[chosen, 0] = 0
         weights[chosen, arms[chosen]] = 1
     return weights
@@ -81,11 +81,11 @@ def policy_weights(score, fraction, arm=1, random=False):
 def policy_scores(weights, scores):
     weights = np.asarray(weights)
     if weights.shape != scores.shape or np.any(weights < 0) or not np.allclose(weights.sum(axis=1), 1):
-        raise ValueError("Policy rows must be probability vectors")
+        raise ValueError("Строки стратегии должны быть векторами вероятностей")
     return np.sum(weights*scores, axis=1)
 
 def summarize(values, scale=1.0):
-    """Pointwise 95% normal CI conditional on the fitted policy."""
+    """Индивидуальный нормальный 95% ДИ при зафиксированной обученной стратегии."""
     values = np.asarray(values, dtype=float)*scale
     mean = float(values.mean())
     se = float(values.std(ddof=1)/np.sqrt(len(values)))
@@ -115,7 +115,7 @@ def experiment_effects(frame):
     return result
 
 def uplift_curve(score, y, action):
-    """Mens vs control, known conditional p=.5. Unnormalized Qini area.
+    """Мужское письмо против контроля, известная условная p=0,5. Ненормированный Qini.
     gain(q)=mean(1[rank<=q]*(A*Y/.5-(1-A)*Y/.5)).
     """
     mask = np.asarray(action) != 2

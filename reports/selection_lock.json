@@ -11,8 +11,8 @@
     "logit_1",
     "boost"
   ],
-  "selection_metric": "validation AIPW incremental conversions at 20% contacts",
-  "primary_contrast": "multiarm minus random_mens",
+  "selection_metric": "Дополнительные покупки по AIPW на валидации при охвате 20%",
+  "primary_contrast": "Аплифт с выбором письма минус случайная рассылка мужского письма",
   "propensity": [
     0.3333333333333333,
     0.3333333333333333,

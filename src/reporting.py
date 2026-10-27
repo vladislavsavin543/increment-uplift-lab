@@ -1,8 +1,9 @@
-"""Generate figures, the business memo, and an offline interactive dashboard."""
+"""Сборка графиков, отчёта для бизнеса и автономного дашборда."""
 import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
+from src.localization import ARM_LABELS, MODEL_LABELS, STRATEGY_LABELS
 
 def fmt_ci(row, scale=10000):
     return f'{row["estimate"]*scale:.1f} [{row["low"]*scale:.1f}; {row["high"]*scale:.1f}]'
@@ -22,17 +23,16 @@ def build_reports(root, result):
     effects=pd.DataFrame(result["effects"])
     colors={"random_mens":"#777c89","response":"#4f72c4","rule":"#d38935",
             "uplift":"#9365c8","multiarm":"#17866f"}
-    labels={"random_mens":"Random / Mens","response":"Response model","rule":"Recency rule",
-            "uplift":"Uplift / Mens","multiarm":"Uplift / Best email"}
+    labels=STRATEGY_LABELS
     fig,ax=plt.subplots(figsize=(10,5.8))
     for name,g in policies.groupby("strategy",sort=False):
         ax.plot(g.coverage*100,g.estimate*10000,label=labels[name],color=colors[name],lw=2.2)
     ax.axhline(0,color="#b5b5b5",lw=.8)
     ax.axvline(20,color="#b5b5b5",lw=.8,ls="--")
-    ax.set(xlabel="Contact coverage (%)",ylabel="Estimated incremental purchases / 10,000 customers",
-           title="More contacts do not automatically mean a better targeting policy")
+    ax.set(xlabel="Охват аудитории, %",ylabel="Дополнительные покупки на 10 000 клиентов",
+           title="Больший охват не гарантирует лучшую стратегию")
     ax.legend(frameon=False)
-    fig.text(.1,.01,"Held-out test; AIPW estimates. Coverage exploration is descriptive; primary comparison at 20%.",fontsize=8)
+    fig.text(.1,.01,"Отдельная тестовая выборка; оценка AIPW. Главное сравнение — при охвате 20%.",fontsize=8)
     fig.tight_layout(rect=[0,.035,1,1])
     fig.savefig(figdir/"policy_curves.png",dpi=180)
     plt.close(fig)
@@ -43,8 +43,8 @@ def build_reports(root, result):
             [max(0,(row.high-row.estimate)*10000)]],fmt="o",capsize=4,color=colors[row.strategy])
     ax.set_yticks(range(len(p20)),[labels[x] for x in p20.strategy])
     ax.axvline(0,color="#777",lw=.8)
-    ax.set(xlabel="Incremental purchases / 10,000 (pointwise 95% CI)",
-           title="Equal budget: contact 20% of customers")
+    ax.set(xlabel="Дополнительные покупки на 10 000 клиентов (индивидуальный 95% ДИ)",
+           title="Одинаковый бюджет: охват 20% клиентов")
     fig.tight_layout()
     fig.savefig(figdir/"policy_20pct.png",dpi=180)
     plt.close(fig)
@@ -53,10 +53,10 @@ def build_reports(root, result):
     for i,row in conv.iterrows():
         ax.errorbar(row.estimate*100,i,xerr=[[(row.estimate-row.low)*100],
             [(row.high-row.estimate)*100]],fmt="o",capsize=5,color=["#9365c8","#17866f"][i])
-    ax.set_yticks([0,1],["Mens vs no email","Womens vs no email"])
+    ax.set_yticks([0,1],["Мужское письмо против контроля","Женское письмо против контроля"])
     ax.axvline(0,color="#777",lw=.8)
-    ax.set(xlabel="Conversion effect (percentage points, unadjusted 95% CI)",
-           title="Average email effects in the randomized experiment")
+    ax.set(xlabel="Эффект на конверсию, п.п. (95% ДИ без поправки)",
+           title="Средние эффекты писем в рандомизированном эксперименте")
     fig.tight_layout()
     fig.savefig(figdir/"experiment_effects.png",dpi=180)
     plt.close(fig)
@@ -65,9 +65,9 @@ def build_reports(root, result):
     for name,g in curves.groupby("strategy",sort=False):
         ax.plot(g.coverage*100,g.gain*10000,label=f'{labels[name]} (Qini={result["qini"][name]:.5f})',color=colors[name],lw=2)
     g=curves[curves.strategy=="uplift"]
-    ax.plot(g.coverage*100,g.random*10000,color="#777c89",ls="--",label="Random ranking")
-    ax.set(xlabel="Contact coverage (%)",ylabel="IPW incremental purchases / 10,000 eligible customers",
-        title="Binary ranking diagnostic: Mens email vs control")
+    ax.plot(g.coverage*100,g.random*10000,color="#777c89",ls="--",label="Случайное ранжирование")
+    ax.set(xlabel="Охват аудитории, %",ylabel="Дополнительные покупки по IPW на 10 000 клиентов",
+        title="Проверка ранжирования: мужское письмо против контроля")
     ax.legend(frameon=False,fontsize=9)
     fig.tight_layout()
     fig.savefig(figdir/"qini.png",dpi=180)
@@ -79,20 +79,20 @@ def build_reports(root, result):
         if primary["high"]>=0 else
         "На тесте персонализация при охвате 20% уступила случайной рассылке мужского письма.")
     rows="\n".join(f'| {r["label"]} | {fmt_ci(r)} |' for r in p20.to_dict("records"))
-    effectrows="\n".join(f'| {r["arm"]} | {r["control_mean"]*100:.3f}% | {r["treatment_mean"]*100:.3f}% | {r["estimate"]*100:+.3f} п.п. | {r["pvalue_holm"]:.4g} |'
+    effectrows="\n".join(f'| {ARM_LABELS[r["arm"]]} | {r["control_mean"]*100:.3f}% | {r["treatment_mean"]*100:.3f}% | {r["estimate"]*100:+.3f} п.п. | {r["pvalue_holm"]:.4g} |'
         for r in conv.to_dict("records"))
-    report=f"""# Uplift Lab — кому отправлять письмо
+    report=f"""# INCREMENT — кому отправлять письмо
 ## Решение для бизнеса
 {verdict}
-Главное сравнение: выбор письма uplift-моделью против случайной рассылки мужского письма, при одинаковом охвате 20%.
+Главное сравнение: выбор письма аплифт-моделью против случайной рассылки мужского письма, при одинаковом охвате 20%.
 Разница на 10 000 клиентов: **{fmt_ci(primary)} дополнительных покупок**, 95% доверительный интервал.
 Это оценка для зафиксированной стратегии в историческом эксперименте, а не обещание результата новой кампании.
 
 ## Что показал эксперимент
-| Письмо | Контроль: покупки | Письмо: покупки | Средний эффект | p с поправкой Holm |
+| Письмо | Контроль: покупки | Письмо: покупки | Средний эффект | p с поправкой Холма |
 |---|---:|---:|---:|---:|
 {effectrows}
-Поправка Holm применяется к шести сравнениям: 2 письма × 3 исхода.
+Поправка Холма применяется к шести сравнениям: 2 письма × 3 исхода.
 Интервалы на графике и в CSV — индивидуальные 95%, без поправки на множественность.
 Покупки — основной исход, посещения и выручка — вторичные.
 Не нужно подменять покупку посещением ради более красивого результата.
@@ -113,7 +113,7 @@ def build_reports(root, result):
 При выборе будущей стратегии зафиксировать её до нового эксперимента.
 
 ## Данные и дизайн
-- Kevin Hillstrom / MineThatData, 2008; 64 000 клиентов; три случайно назначенные группы.
+- Кевин Хиллстром / MineThatData, 2008; 64 000 клиентов; три случайно назначенные группы.
 - Окно результата — две недели. Названия писем описывают ассортимент, а не пол клиента.
 - CSV получен с зеркала scikit-uplift; MD5 проверен. SHA-256: data/raw/manifest.json.
 - Пропуски: {result["quality"]["missing"]}; совпадающие полные профили: {result["quality"]["duplicate_profiles"]}.
@@ -122,19 +122,19 @@ def build_reports(root, result):
   Проверки баланса не доказывают рандомизацию, но помогают обнаружить грубые проблемы.
 
 ## Как исключена утечка
-Разбиение 60/20/20, seed=42; второй split seed=43. Стратификация только по назначенному письму.
+Разбиение 60/20/20, начальное значение генератора 42; для второго разбиения — 43. Стратификация только по назначенному письму.
 Обучение: {result["quality"]["split_counts"]["train"]}; валидация: {result["quality"]["split_counts"]["validation"]}; тест: {result["quality"]["split_counts"]["test"]}.
 Покупок на тесте всего {result["quality"]["split_purchases"]["test"]}; оценки отдельных сегментов шумные.
 Признаки: давность покупки, log1p прошлых расходов, прежние категории, новый клиент, тип локации, канал.
 visit, conversion, spend и назначенная группа исключены из признаков.
 
-Три кандидата T-learner: логистическая регрессия C=0.1, C=1 и неглубокий gradient boosting.
-Модель для мужского письма: {result["selection"]["selected_models"]["uplift"]}.
-Модель выбора письма: {result["selection"]["selected_models"]["multiarm"]}.
+Три кандидата T-learner: логистическая регрессия C=0.1, C=1 и неглубокий градиентный бустинг.
+Модель для мужского письма: {MODEL_LABELS[result["selection"]["selected_models"]["uplift"]]}.
+Модель выбора письма: {MODEL_LABELS[result["selection"]["selected_models"]["multiarm"]]}.
 Выбор — по AIPW-эффекту при 20% охвате на валидации.
 Решения записаны в selection_lock.json до расчёта тестовых исходов.
-Затем модели переобучены на train+validation; тест не участвует в обучении.
-Nuisance-модели для AIPW — отдельные фиксированные логистические модели C=1.
+Затем модели переобучены на объединении обучения и валидации; тест не участвует в обучении.
+Вспомогательные модели исходов для AIPW — отдельные фиксированные логистические модели C=1.
 
 ## Как считается эффект стратегии
 Для каждой группы a вычисляем:
@@ -144,11 +144,11 @@ Nuisance-модели для AIPW — отдельные фиксированн�
 Среднее incremental_i оценивает изменение покупок на одного клиента всей аудитории.
 Для сравнения стратегий берём парную разность этих величин на тех же клиентах.
 Известная вероятность назначения 1/3 используется напрямую.
-IPW без outcome-моделей приведён рядом в CSV как проверка чувствительности.
+IPW без моделей исходов приведён рядом в CSV как проверка чувствительности.
 
 Контактный бюджет — floor(q*n). Случайная стратегия аналитически усреднена по случайному выбору аудитории.
-Модель покупки ранжирует по P(Y=1 | Mens, X); uplift — по разнице P(Y=1 | Mens, X)-P(Y=1 | Control, X).
-Multi-arm выбирает письмо с большей предсказанной разницей и ранжирует по этой разнице.
+Модель покупки ранжирует по P(Y=1 | Mens, X); аплифт — по разнице P(Y=1 | Mens, X)-P(Y=1 | Control, X).
+Стратегия выбора письма выбирает письмо с большей предсказанной разницей и ранжирует по этой разнице.
 При фиксированном бюджете стратегия заполняет его даже при отрицательном предсказании.
 Охват 0% позволяет отказаться от рассылки целиком.
 
@@ -160,7 +160,7 @@ Multi-arm выбирает письмо с большей предсказанн
 ## Qini
 Диагностика только для мужского письма против контроля.
 После ограничения на эти две группы вероятность воздействия равна 1/2.
-Кривая — IPW cumulative gain. Qini — ненормированная площадь над случайной диагональю;
+Кривая — накопленный дополнительный эффект по IPW. Qini — ненормированная площадь над случайной диагональю;
 это не AUROC. Разные реализации Qini нельзя сравнивать без проверки определения.
 Все охваты, кроме главного сравнения на 20%, — исследовательские результаты.
 
