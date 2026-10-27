@@ -1,5 +1,9 @@
 # INCREMENT — лаборатория аплифта
 
+[![Проверки анализа](https://github.com/vladislavsavin543/increment-uplift-lab/actions/workflows/checks.yml/badge.svg)](https://github.com/vladislavsavin543/increment-uplift-lab/actions/workflows/checks.yml)
+
+**[Открыть интерактивное демо](https://vladislavsavin543.github.io/increment-uplift-lab/)** · [Отчёт](reports/REPORT_RU.md) · [Ноутбук](notebooks/01_uplift_walkthrough.ipynb)
+
 **Кому отправить письмо, чтобы получить дополнительные покупки при ограниченном бюджете?**
 
 Портфолио-проект по маркетинговой аналитике на данных рандомизированного
@@ -37,6 +41,8 @@
 ![Стратегии при одинаковом бюджете](reports/figures/policy_20pct.png)
 
 ## Как посмотреть проект
+
+- **[Открой дашборд онлайн](https://vladislavsavin543.github.io/increment-uplift-lab/)** — без установки Python и скачивания проекта.
 
 - Скачай проект и открой **reports/dashboard.html** в браузере.
   В Windows можно запустить **open_dashboard.cmd**.
@@ -123,6 +129,7 @@ src/dashboard.html             шаблон автономного дашбор�
 sql/                           витрина DuckDB, метрики и исследование сегментов
 scripts/download_data.py       загрузка данных с проверкой контрольной суммы
 scripts/build_notebook.py      сборка ноутбука с выполненными расчётами
+scripts/build_site.py          сборка автономного демо для GitHub Pages
 notebooks/                     готовый разбор исследования
 tests/                         проверки оценок на синтетике и сохранённых результатов
 reports/                       дашборд, отчёт, таблицы, графики и решения
@@ -163,3 +170,14 @@ data/processed/                локальная база DuckDB, разбие�
 
 Документация, дашборд, графики и объяснения в ноутбуке написаны на русском.
 Названия библиотек, функций, CSV-полей и ключей JSON сохранены для совместимости.
+
+## Публикация демо
+
+Демо размещается в GitHub Pages. При отправке изменений в main отдельный
+процесс GitHub Actions собирает сайт командой python scripts/build_site.py.
+Он публикует только готовый автономный HTML-дашборд; исходные и обработанные
+клиентские данные на сайт не копируются.
+
+После изменения анализа сначала выполни python run.py, чтобы обновить
+reports/dashboard.html, затем отправь обновлённые материалы в репозиторий.
+Отчёт и CSV доступны по ссылкам на файлы GitHub.

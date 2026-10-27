@@ -5,3 +5,4 @@ data/raw/*.gz
 data/processed/
 *.zip
 
+_site/

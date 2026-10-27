@@ -16,7 +16,7 @@ def main():
     paths=[]
     for path in sorted(ROOT.rglob("*")):
         rel=path.relative_to(ROOT)
-        if not path.is_file() or any(part in {".git","__pycache__",".pytest_cache",".venv"} for part in rel.parts):
+        if not path.is_file() or any(part in {".git","__pycache__",".pytest_cache",".venv","_site"} for part in rel.parts):
             continue
         if rel.parts[:2]==("data","processed"):
             continue
@@ -34,4 +34,3 @@ def main():
 
 if __name__=="__main__":
     main()
-
