@@ -154,7 +154,7 @@ def main():
     # Сохраняем решения на диск ДО оценки тестовых исходов.
     lock = dict(seed=SEED, primary_outcome="conversion", primary_coverage=PRIMARY_Q,
         selected_models=selected, candidates=candidates, selection_metric="Дополнительные покупки по AIPW на валидации при охвате 20%",
-        primary_contrast="Аплифт с выбором письма минус случайная рассылка мужского письма", propensity=[1/3]*3,
+        primary_contrast="Аплифт с выбором письма минус случайная рассылка мужского ассортимента", propensity=[1/3]*3,
         splits_sha256=hashlib.sha256((ROOT/"data"/"processed"/"splits.csv").read_bytes()).hexdigest())
     save_json(ROOT/"reports"/"selection_lock.json", lock)
     selection.to_csv(TABLES/"model_selection.csv", index=False)

@@ -42,14 +42,14 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 <main>
 <section class="hero">
 <div><div class="eyebrow">Маркетинговая аналитика · рандомизированный эксперимент</div><h1>Кому письмо добавит покупку?</h1><p>Сравниваем выбор покупателей и выбор тех, чьё поведение меняется благодаря рекламе. Одинаковый бюджет контактов, отдельная тестовая выборка, измеримый дополнительный эффект.</p><span class="badge">64 000 клиентов · 3 группы · 2 недели</span></div>
-<div class="hero-side"><div class="eyebrow">Главное сравнение · охват 20%</div><strong id="primary">—</strong><div>покупок на 10 000 клиентов<br>сверх случайной рассылки мужского письма</div><p id="primaryCI" class="small"></p><div id="verdict" class="small"></div></div>
+<div class="hero-side"><div class="eyebrow">Главное сравнение · охват 20%</div><strong id="primary">—</strong><div>покупок на 10 000 клиентов<br>сверх случайной рассылки с мужским ассортиментом</div><p id="primaryCI" class="small"></p><div id="verdict" class="small"></div></div>
 </section>
 <div class="stats"><div class="stat"><strong>60 / 20 / 20</strong><span>обучение / валидация / тест, %</span></div><div class="stat"><strong id="testN">—</strong><span>клиентов на тесте</span></div><div class="stat"><strong id="testEvents">—</strong><span>покупок на тесте</span></div><div class="stat"><strong id="model">—</strong><span>модель выбора письма</span></div></div>
 <section id="lab">
 <div class="section-head"><div><div class="eyebrow">01 / Сравнение стратегий</div><h2>Один бюджет. Пять стратегий.</h2></div><p>Двигай охват и сравнивай оценки на тесте. Основное заранее выбранное сравнение — 20%. Остальные сценарии помогают исследовать результат.</p></div>
 <div class="lab">
 <aside class="card controls"><h3>Параметры кампании</h3>
-<div class="field"><label for="strategy">Стратегия</label><select id="strategy"><option value="multiarm">Аплифт / выбор письма</option><option value="uplift">Аплифт / мужское письмо</option><option value="response">Вероятность покупки</option><option value="rule">Недавние покупки</option><option value="random_mens">Случайно / мужское письмо</option></select></div>
+<div class="field"><label for="strategy">Стратегия</label><select id="strategy"><option value="multiarm">Аплифт / выбор письма</option><option value="uplift">Аплифт / мужской ассортимент</option><option value="response">Вероятность покупки</option><option value="rule">Недавние покупки</option><option value="random_mens">Случайно / мужской ассортимент</option></select></div>
 <div class="field"><label for="coverage">Доля клиентов для контакта</label><select id="coverage"><option value="0">0% — никому</option><option value="0.05">5%</option><option value="0.1">10%</option><option value="0.2" selected>20% — главное сравнение</option><option value="0.3">30%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option></select></div>
 <div class="field"><label for="population">Размер аудитории</label><input id="population" type="number" min="1" max="10000000" step="1" value="10000"><div class="hint">Масштабирование предполагает сопоставимую аудиторию.</div></div>
 <div class="inline"><div class="field"><label for="cost">Контакт, $</label><input id="cost" type="number" min="0" max="10000" step=".01" value=".02"></div><div class="field"><label for="margin">Маржа покупки, $</label><input id="margin" type="number" min="0" max="1000000" step="1" value="25"></div></div>
@@ -61,7 +61,7 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 </section>
 <section id="experiment"><div class="section-head"><div><div class="eyebrow">02 / Эксперимент с тремя группами</div><h2>Сначала эффект самой рассылки</h2></div><p>Средние результаты по всем 64 000 клиентам. Покупки считаются относительно всей группы, включая тех, кто ничего не купил.</p></div>
 <div class="card table-card"><table><thead><tr><th>Группа</th><th>Клиентов</th><th>Покупки</th><th>Конверсия</th><th>Выручка / клиент</th></tr></thead><tbody id="experimentTable"></tbody></table></div>
-<div class="two" style="margin-top:20px"><div class="card"><h3>Проверка эксперимента</h3><p id="quality"></p><p class="small">SRM проверяет соответствие размеров групп ожидаемому распределению. SMD показывает баланс наблюдаемых признаков. Эти проверки помогают найти проблемы, но не доказывают корректность дизайна.</p></div><div class="card"><h3>Что означает «эффект»</h3><p>Разница средней вероятности покупки между письмом и контролем. Наблюдаемая покупка клиента сама по себе не показывает, повлияло ли на неё письмо.</p><p class="small">Мужское и женское письмо — названия ассортимента. Пол клиентов в данных не указан. Не интерпретируй эти группы как пол аудитории.</p></div></div></section>
+<div class="two" style="margin-top:20px"><div class="card"><h3>Проверка эксперимента</h3><p id="quality"></p><p class="small">SRM проверяет соответствие размеров групп ожидаемому распределению. SMD показывает баланс наблюдаемых признаков. Эти проверки помогают найти проблемы, но не доказывают корректность дизайна.</p></div><div class="card"><h3>Что означает «эффект»</h3><p>Разница средней вероятности покупки между письмом и контролем. Наблюдаемая покупка клиента сама по себе не показывает, повлияло ли на неё письмо.</p><p class="small">Мужской и женский ассортимент — варианты ассортимента. Пол клиентов в данных не указан. Не интерпретируй эти группы как пол аудитории.</p></div></div></section>
 <section id="method"><div class="section-head"><div><div class="eyebrow">03 / Воспроизводимый анализ</div><h2>Как получен результат</h2></div><p>Модель и основной охват выбраны до тестовой оценки. Полный протокол и ограничения — в отчёте.</p></div>
 <div class="steps"><div class="step"><span class="number">01</span><b>Обучить</b><p>38 400 клиентов. Только признаки до рассылки. Отдельная модель покупки для каждой группы.</p></div><div class="step"><span class="number">02</span><b>Выбрать и зафиксировать</b><p>12 800 клиентов. Три кандидата. Выбор по эффекту при 20% охвате. Затем обучение на объединении обучения и валидации.</p></div><div class="step"><span class="number">03</span><b>Оценить</b><p>12 800 клиентов теста. AIPW с известной вероятностью назначения 1/3. Парное сравнение при одинаковом бюджете.</p></div></div>
 <details><summary>Почему модель покупки и аплифт выбирают разных людей?</summary><p>Первая ранжирует по вероятности покупки после письма. Вторая — по разнице прогнозов с письмом и без. Клиент с высокой исходной вероятностью покупки может иметь небольшой дополнительный эффект.</p></details>
@@ -77,7 +77,7 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 const R=JSON.parse(document.getElementById("results").textContent);
 const COLORS={random_mens:"#777c89",response:"#4f72c4",rule:"#d38935",uplift:"#9365c8",multiarm:"#17866f"};
 const ORDER=["random_mens","response","rule","uplift","multiarm"];
-const ARM_LABELS={"No E-Mail":"Без письма","Mens E-Mail":"Мужское письмо","Womens E-Mail":"Женское письмо"};
+const ARM_LABELS={"No E-Mail":"Без письма","Mens E-Mail":"Мужской ассортимент","Womens E-Mail":"Женский ассортимент"};
 const $=id=>document.getElementById(id);
 const f=(x,d=1)=>new Intl.NumberFormat("ru-RU",{maximumFractionDigits:d,minimumFractionDigits:d}).format(x);
 const ci=(x,scale=1)=>"["+f(x.low*scale)+"; "+f(x.high*scale)+"]";
@@ -123,7 +123,7 @@ function update(){
    return '<tr class="'+(name===s?"selected":"")+'"><td>'+v.label+"</td><td>"+f(v.estimate*10000)+"</td><td>"+ci(v,10000)+"</td><td>"+(p?f(p.estimate*10000)+" "+ci(p,10000):"База сравнения")+"</td></tr>";
  }).join("");
  const paired=R.paired.find(x=>x.strategy===s&&x.coverage===q);
- const actionText=s==="multiarm"?" Мужское письмо: "+f(N*r.mens_share,0)+", женское: "+f(N*r.womens_share,0)+".":"";
+ const actionText=s==="multiarm"?" Мужской ассортимент: "+f(N*r.mens_share,0)+", женский ассортимент: "+f(N*r.womens_share,0)+".":"";
  $("scenario").textContent=(q===0?"Рассылка отключена: ноль контактов и нулевой дополнительный эффект.":paired?(paired.low>0?"Разница со случайной рассылкой положительна в этом интервале.":paired.high<0?"В этом сценарии стратегия уступает случайной рассылке.":"Интервал разницы со случайной рассылкой включает ноль."):"Случайный выбор клиентов: базовая стратегия.")+actionText;
  draw(q,s);
 }

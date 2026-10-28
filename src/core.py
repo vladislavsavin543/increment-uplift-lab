@@ -1,4 +1,4 @@
-"""Порядок действий: 0 — без письма, 1 — мужское письмо, 2 — женское."""
+"""Порядок действий: 0 — без письма, 1 — мужской ассортимент, 2 — женский ассортимент."""
 from __future__ import annotations
 import numpy as np
 import pandas as pd
@@ -115,7 +115,7 @@ def experiment_effects(frame):
     return result
 
 def uplift_curve(score, y, action):
-    """Мужское письмо против контроля, известная условная p=0,5. Ненормированный Qini.
+    """Мужской ассортимент против контроля, известная условная p=0,5. Ненормированный Qini.
     gain(q)=mean(1[rank<=q]*(A*Y/.5-(1-A)*Y/.5)).
     """
     mask = np.asarray(action) != 2
